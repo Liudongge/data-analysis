@@ -1,5 +1,5 @@
 {
-  "name": "data-map",
+  "name": "data-analysis",
   "version": "1.0.0",
   "description": "通过nginx的log文件进行数据抓取以及图表展示",
   "author": "liudg",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "echarts": "^3.8.5",
+    "v-charts": "^1.15.0",
     "vue": "^2.5.2",
     "vue-resource": "^1.3.5",
     "vue-router": "^3.0.1"
