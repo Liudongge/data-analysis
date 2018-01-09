@@ -47,9 +47,6 @@ export default {
     return {}
   },
   mounted() {
-    // const defaultOption = getOption()
-    // let browser = this.$echarts.init(document.getElementById('browser'))
-    // browser.setOption(defaultOption)
     let ip = window.location.host.split(':')[0]
     let url = `http://${ip}:3000/api/public/data/nginx/logInfo/`
     Vue.http({

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+        <script type="text/javascript">
+            window.logInfo = {};
+            window.logInfo.openTime = performance.timing.navigationStart;
+            window.logInfo.whiteScreenTime = +new Date() - window.logInfo.openTime;
+        </script>
+    </head>
+    <body>
+        <div>这是第一屏，这是第一屏</div>
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+        <div>第一屏结尾，第一屏结尾</div>
+        <script type="text/javascript">
+            (function logFirstScreen() {
+                var images = document.getElementsByTagName('img');
+                var iLen = images.length;
+                var curMax = 0;
+                var inScreenLen = 0;
+                // 图片的加载回调
+                function imageBack() {
+                    this.removeEventListener
+                    && this.removeEventListener('load', imageBack, !1);
+                    if (++curMax === inScreenLen) {
+                        // 如果所有在首屏的图片均已加载完成了的话，发送日志
+                        log();
+                    }
+                }
+                // 对于所有的位于指定区域的图片，绑定回调事件
+                for (var s = 0; s < iLen; s++) {
+                    var img = images[s];
+                    var offset = {
+                        top: 0
+                    };
+                    var curImg = img;
+                    while (curImg.offsetParent) {
+                        offset.top += curImg.offsetTop;
+                        curImg = curImg.offsetParent;
+                    }
+                    // 判断图片在不在首屏
+                    if (document.documentElement.clientHeight < offset.top) {
+                        continue;
+                    }
+                    // 图片还没有加载完成的话
+                    if (!img.complete) {
+                        inScreenLen++;
+                        img.addEventListener('load', imageBack, !1);
+                    }
+                }
+                // 如果首屏没有图片的话，直接发送日志
+                if (inScreenLen === 0) {
+                    log();
+                }
+                // 发送日志进行统计
+                function log () {
+                    window.logInfo.firstScreen = +new Date() - window.logInfo.openTime;
+                }
+            })();
+            document
+            .addEventListener(
+                'DOMContentLoaded',
+                function (event) {
+                    window.logInfo.readyTime = +new Date() - window.logInfo.openTime;
+                }
+            );
+            window.onload = function () {
+                window.logInfo.allloadTime = +new Date() - window.logInfo.openTime;
+                var timname = {
+                    whiteScreenTime: '白屏时间',
+                    firstScreen: '首屏时间',
+                    readyTime: '用户可操作时间',
+                    allloadTime: '总下载时间'
+                };
+                var logStr = '';
+                for (var i in timname) {
+                    console.log(timname[i] + ':' + window.logInfo[i] + 'ms');
+                    logStr += '&' + i + '=' + window.logInfo[i];
+                }
+                (new Image()).src = 'http://localhost:8121/?action=speedlog' + logStr;
+            };
+        </script>
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+        <img src="http://static.oschina.net/uploads/space/2016/0623/152644_6UUC_1177792.png">
+    </body>
+</html>

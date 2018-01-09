@@ -19,6 +19,11 @@ export default new Router({
       path: '/requestList',
       name: 'RequsetList',
       component: resolve => require(['../views/request-list'], resolve)
+    },
+    {
+      path: '/timeAnalysis',
+      name: 'TimeAnalysis',
+      component: resolve => require(['../views/time-analysis'], resolve)
     }
   ]
 })
