@@ -152,7 +152,7 @@ function getGradientColor(start, end, max, val) {
   return '#' + gR + gG + gB;
 }
 
-let pCountObj = {} // 各省份访问次数：key为省份，value为访问次数
+// let pCountObj = {} // 各省份访问次数：key为省份，value为访问次数
 export default {
   name: 'chart',
   data() {
@@ -160,25 +160,26 @@ export default {
   },
   mounted() {
     let ip = window.location.host.split(':')[0]
-    let cityUrl = `http://${ip}:3000/api/public/data/nginx/city/`
+    let cityUrl = `http://${ip}:3000/active/api/public/data/nginx/logInfo/`
     Vue.http({
       method: 'GET',
       url: cityUrl
     }).then(result => {
       if (result.body.code === 200) {
-        result.body.cityInfo.forEach(item => {
-          if (pCountObj[item.province] && pCountObj[item.province] > 0) {
-            pCountObj[item.province] += 1
-          } else {
-            pCountObj[item.province] = 1
-          }
-        })
+        // // 对省份做计数处理
+        // result.body.pVisitedCounts.forEach(item => {
+        //   if (pCountObj[item.province] && pCountObj[item.province] > 0) {
+        //     pCountObj[item.province] += 1
+        //   } else {
+        //     pCountObj[item.province] = 1
+        //   }
+        // })
         // let cityInfo = this.$echarts.init(document.getElementById('cityInfo'))
         // cityInfo.setOption(option)
-        const defaultOption = getOption(pCountObj)
+        const defaultOption = getOption(result.body.pVisitedCounts)
         let cityInfo = this.$echarts.init(document.getElementById('cityInfo'))
         cityInfo.setOption(defaultOption)
-        var TOPN = 25
+        const TOPN = 25
         var option = cityInfo.getOption()
         // 修改top
         option.grid[0].height = TOPN * 20
@@ -186,12 +187,12 @@ export default {
         option.yAxis[0].splitNumber = TOPN
         option.series[1].data[0] = TOPN
         // 排序
-        var data = option.series[0].data.sort(function(a, b) {
+        var sortArr = option.series[0].data.sort(function(a, b) {
           return b.value - a.value
         })
 
-        var maxValue = data[0].value,
-          minValue = data.length > TOPN ? data[TOPN - 1].value : data[data.length - 1].value
+        var maxValue = sortArr[0].value,
+          minValue = sortArr.length > TOPN ? sortArr[TOPN - 1].value : sortArr[sortArr.length - 1].value
 
         var s = option.visualMap[0].controller.inRange.color[0],
           e = option.visualMap[0].controller.inRange.color.slice(-1)[0]
