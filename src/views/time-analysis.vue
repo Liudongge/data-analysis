@@ -66,6 +66,16 @@ export default {
     }).catch(response => {
       console.error(response)
     })
+    Vue.http({
+      method: 'GET',
+      url: 'http://localhost:3000/api/public/data/sign/'
+    }).then(result => {
+      if (result.body.code === 200) {
+        console.log('success')
+      }
+    }).catch(response => {
+      console.error(response)
+    })
   }
 }
 </script>

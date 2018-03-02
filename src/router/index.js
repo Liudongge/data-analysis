@@ -24,6 +24,11 @@ export default new Router({
       path: '/timeAnalysis',
       name: 'TimeAnalysis',
       component: resolve => require(['../views/time-analysis'], resolve)
+    },
+    {
+      path: '/sendUrl',
+      name: 'sendUrl',
+      component: resolve => require(['../views/get-send-url'], resolve)
     }
   ]
 })
